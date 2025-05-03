@@ -1,61 +1,68 @@
-"use client"
+import type React from "react";
 
-import type React from "react"
-
-import { useState } from "react"
-import { useRouter } from "next/router"
-import { signIn } from "next-auth/react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle } from "lucide-react"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AlertCircle } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function Login() {
-  const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     try {
       const result = await signIn("credentials", {
         redirect: false,
         email,
         password,
-      })
+      });
 
       if (result?.error) {
-        setError("Email atau password salah")
-        setIsLoading(false)
-        return
+        setError("Email atau password salah");
+        setIsLoading(false);
+        return;
       }
 
-      router.push("/dashboard")
+      router.push("/dashboard");
     } catch (error) {
-      setError("Terjadi kesalahan saat login")
-      setIsLoading(false)
+      setError("Terjadi kesalahan saat login");
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-muted/40">
+    <div className="flex justify-center items-center bg-muted/40 h-screen">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Magangku</CardTitle>
-          <CardDescription>Masuk ke dashboard admin untuk mengelola data peserta magang</CardDescription>
+          <CardTitle className="font-bold text-2xl">Magangku</CardTitle>
+          <CardDescription>
+            Masuk ke dashboard admin untuk mengelola data peserta magang
+          </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {error && (
               <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
+                <AlertCircle className="w-4 h-4" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -71,7 +78,7 @@ export default function Login() {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              <div className="flex justify-between items-center">
                 <Label htmlFor="password">Password</Label>
               </div>
               <Input
@@ -91,5 +98,5 @@ export default function Login() {
         </form>
       </Card>
     </div>
-  )
+  );
 }

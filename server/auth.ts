@@ -1,9 +1,13 @@
-import type { GetServerSidePropsContext } from "next"
-import { getServerSession, type NextAuthOptions, type DefaultSession } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { prisma } from "./db"
-import { compare } from "bcrypt"
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { compare } from "bcrypt";
+import type { GetServerSidePropsContext } from "next";
+import {
+  getServerSession,
+  type DefaultSession,
+  type NextAuthOptions,
+} from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { prisma } from "./db";
 
 /**
  * Module augmentation for `next-auth` types.
@@ -15,14 +19,14 @@ import { compare } from "bcrypt"
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id: string
+      id: string;
       // ...other properties
-    } & DefaultSession["user"]
+    } & DefaultSession["user"];
   }
 
   interface User {
     // ...other properties
-    id: string
+    id: string;
   }
 }
 
@@ -36,9 +40,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, token }) {
       if (session.user && token.sub) {
-        session.user.id = token.sub
+        session.user.id = token.sub;
       }
-      return session
+      return session;
     },
   },
   adapter: PrismaAdapter(prisma),
@@ -51,28 +55,31 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null
+          return null;
         }
 
         const admin = await prisma.admin.findUnique({
           where: { email: credentials.email },
-        })
+        });
 
         if (!admin) {
-          return null
+          return null;
         }
 
-        const isPasswordValid = await compare(credentials.password, admin.passwordHash)
+        const isPasswordValid = await compare(
+          credentials.password,
+          admin.passwordHash
+        );
 
         if (!isPasswordValid) {
-          return null
+          return null;
         }
 
         return {
           id: admin.id,
           name: admin.name,
           email: admin.email,
-        }
+        };
       },
     }),
   ],
@@ -83,7 +90,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-}
+};
 
 /**
  * Wrapper for `getServerSession` so that you don't need to import the
@@ -92,8 +99,8 @@ export const authOptions: NextAuthOptions = {
  * @see https://next-auth.js.org/configuration/nextjs
  **/
 export const getServerAuthSession = (ctx: {
-  req: GetServerSidePropsContext["req"]
-  res: GetServerSidePropsContext["res"]
+  req: GetServerSidePropsContext["req"];
+  res: GetServerSidePropsContext["res"];
 }) => {
-  return getServerSession(ctx.req, ctx.res, authOptions)
-}
+  return getServerSession(ctx.req, ctx.res, authOptions);
+};

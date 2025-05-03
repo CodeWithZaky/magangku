@@ -1,6 +1,6 @@
-import { z } from "zod"
-import { hash } from "bcrypt"
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
+import { hash } from "bcrypt";
+import { z } from "zod";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const adminRouter = createTRPCRouter({
   createAdmin: publicProcedure
@@ -9,22 +9,22 @@ export const adminRouter = createTRPCRouter({
         name: z.string().min(1, "Nama harus diisi"),
         email: z.string().email("Email tidak valid"),
         password: z.string().min(6, "Password minimal 6 karakter"),
-      }),
+      })
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, email, password } = input
+      const { name, email, password } = input;
 
       // Check if admin with email already exists
       const existingAdmin = await ctx.prisma.admin.findUnique({
         where: { email },
-      })
+      });
 
       if (existingAdmin) {
-        throw new Error("Email sudah terdaftar")
+        throw new Error("Email sudah terdaftar");
       }
 
       // Hash password
-      const passwordHash = await hash(password, 10)
+      const passwordHash = await hash(password, 10);
 
       // Create admin
       return await ctx.prisma.admin.create({
@@ -33,7 +33,7 @@ export const adminRouter = createTRPCRouter({
           email,
           passwordHash,
         },
-      })
+      });
     }),
 
   getProfile: protectedProcedure.query(async ({ ctx }) => {
@@ -45,12 +45,12 @@ export const adminRouter = createTRPCRouter({
         email: true,
         createdAt: true,
       },
-    })
+    });
 
     if (!admin) {
-      throw new Error("Admin tidak ditemukan")
+      throw new Error("Admin tidak ditemukan");
     }
 
-    return admin
+    return admin;
   }),
-})
+});
