@@ -77,7 +77,7 @@ export default function EditIntern() {
         institution: intern.institution,
         startDate: new Date(intern.startDate).toISOString().split("T")[0],
         endDate: new Date(intern.endDate).toISOString().split("T")[0],
-        status: intern.status,
+        status: intern.status as MagangStatus,
       });
     }
   }, [intern]);
@@ -118,7 +118,7 @@ export default function EditIntern() {
       institution: formData.institution,
       startDate: new Date(formData.startDate),
       endDate: new Date(formData.endDate),
-      status: formData.status,
+      status: formData.status as MagangStatus,
     });
   };
 
@@ -218,7 +218,7 @@ export default function EditIntern() {
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
                 <Select
-                  value={formData.status}
+                  value={intern?.status}
                   onValueChange={handleStatusChange}
                 >
                   <SelectTrigger id="status">
