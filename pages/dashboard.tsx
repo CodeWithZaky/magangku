@@ -1,6 +1,7 @@
 import DashboardLayout from "@/components/dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/utils/trpc";
+import { MagangStatus } from "@prisma/client";
 import { Calendar, UserCheck, UsersRound, UserX } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -126,7 +127,7 @@ export default function Dashboard() {
                     <td className="p-2">
                       <span
                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          intern.status === "Aktif"
+                          intern.status === MagangStatus.AKTIF
                             ? "bg-green-100 text-green-800"
                             : "bg-gray-100 text-gray-800"
                         }`}
