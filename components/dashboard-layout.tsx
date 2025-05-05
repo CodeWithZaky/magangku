@@ -30,6 +30,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type ReactNode, useState } from "react";
+import { ToggleTheme } from "./toggle-theme";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -115,6 +116,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <header className="flex items-center gap-4 bg-background px-4 lg:px-6 border-b h-14 lg:h-[60px]">
             <SidebarTrigger />
             <div className="flex-1" />
+            <ToggleTheme />
             <div className="flex items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
