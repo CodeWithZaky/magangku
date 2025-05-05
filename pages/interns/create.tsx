@@ -21,21 +21,28 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { api } from "@/utils/trpc";
+import { MagangStatus } from "@prisma/client";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function CreateIntern() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    institution: string;
+    startDate: string;
+    endDate: string;
+    status: MagangStatus;
+  }>({
     name: "",
     institution: "",
     startDate: "",
     endDate: "",
-    status: "Aktif",
+    status: MagangStatus.AKTIF,
   });
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -64,7 +71,7 @@ export default function CreateIntern() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (value: MagangStatus) => {
     setFormData((prev) => ({ ...prev, status: value }));
   };
 
@@ -94,7 +101,7 @@ export default function CreateIntern() {
       institution: formData.institution,
       startDate: new Date(formData.startDate),
       endDate: new Date(formData.endDate),
-      status: formData.status,
+      status: MagangStatus.AKTIF,
     });
   };
 
@@ -191,9 +198,11 @@ export default function CreateIntern() {
                     <SelectValue placeholder="Pilih status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Aktif">Aktif</SelectItem>
-                    <SelectItem value="Selesai">Selesai</SelectItem>
-                    <SelectItem value="Dibatalkan">Dibatalkan</SelectItem>
+                    {Object.values(MagangStatus).map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {status}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

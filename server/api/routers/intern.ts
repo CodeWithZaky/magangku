@@ -1,3 +1,4 @@
+import { MagangStatus } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -12,18 +13,18 @@ export const internRouter = createTRPCRouter({
 
     // Get active interns
     const activeInterns = await ctx.prisma.intern.count({
-      where: { status: "Aktif" },
+      where: { status: MagangStatus.AKTIF },
     });
 
     // Get completed interns
     const completedInterns = await ctx.prisma.intern.count({
-      where: { status: "Selesai" },
+      where: { status: MagangStatus.SELESAI },
     });
 
     // Get interns ending soon (within 7 days)
     const endingSoonInterns = await ctx.prisma.intern.count({
       where: {
-        status: "Aktif",
+        status: MagangStatus.AKTIF,
         endDate: {
           gte: today,
           lte: sevenDaysFromNow,
@@ -34,7 +35,7 @@ export const internRouter = createTRPCRouter({
     // Get list of interns ending soon
     const endingSoonInternsList = await ctx.prisma.intern.findMany({
       where: {
-        status: "Aktif",
+        status: MagangStatus.AKTIF,
         endDate: {
           gte: today,
           lte: sevenDaysFromNow,
@@ -125,7 +126,7 @@ export const internRouter = createTRPCRouter({
         institution: z.string().min(1, "Asal instansi harus diisi"),
         startDate: z.date(),
         endDate: z.date(),
-        status: z.string(),
+        status: z.enum([MagangStatus.AKTIF]),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -142,7 +143,12 @@ export const internRouter = createTRPCRouter({
         institution: z.string().min(1, "Asal instansi harus diisi"),
         startDate: z.date(),
         endDate: z.date(),
-        status: z.string(),
+        status: z.enum([
+          MagangStatus.AKTIF,
+          MagangStatus.SELESAI,
+          MagangStatus.DIBATALKAN,
+          MagangStatus.TIDAK_LULUS,
+        ]),
       })
     )
     .mutation(async ({ ctx, input }) => {

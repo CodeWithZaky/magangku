@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { api } from "@/utils/trpc";
+import { MagangStatus } from "@prisma/client";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -31,12 +32,18 @@ export default function EditIntern() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    institution: string;
+    startDate: string;
+    endDate: string;
+    status: MagangStatus;
+  }>({
     name: "",
     institution: "",
     startDate: "",
     endDate: "",
-    status: "",
+    status: MagangStatus.AKTIF,
   });
   const [error, setError] = useState("");
 
@@ -80,7 +87,7 @@ export default function EditIntern() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (value: MagangStatus) => {
     setFormData((prev) => ({ ...prev, status: value }));
   };
 
@@ -218,9 +225,11 @@ export default function EditIntern() {
                     <SelectValue placeholder="Pilih status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Aktif">Aktif</SelectItem>
-                    <SelectItem value="Selesai">Selesai</SelectItem>
-                    <SelectItem value="Dibatalkan">Dibatalkan</SelectItem>
+                    {Object.values(MagangStatus).map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {status}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

@@ -36,34 +36,35 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { api } from "@/utils/trpc";
+import { MagangStatus } from "@prisma/client";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+const ENUM_FILTER = {
+  SEMUA: "SEMUA",
+  AKTIF: MagangStatus.AKTIF,
+  SELESAI: MagangStatus.SELESAI,
+  DIBATALKAN: MagangStatus.DIBATALKAN,
+  TIDAK_LULUS: MagangStatus.TIDAK_LULUS,
+};
+
 export default function Interns() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("SEMUA");
   const [page, setPage] = useState(1);
   const [internToDelete, setInternToDelete] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Initialize query options outside useEffect to prevent conditional hook call
-  const queryOptions = {
-    search: searchQuery,
-    status: statusFilter !== "all" ? statusFilter : undefined,
-    page,
-    limit: 10,
-  };
 
   // Fetch interns with filters
   const { data, isLoading, refetch } = api.intern.getInterns.useQuery(
     {
       search: searchQuery || "",
-      status: statusFilter !== "all" ? statusFilter : undefined,
+      status: statusFilter !== "SEMUA" ? statusFilter : undefined,
       page: page || 1,
       limit: 10,
     },
@@ -125,10 +126,11 @@ export default function Interns() {
               <SelectValue placeholder="Filter Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Semua Status</SelectItem>
-              <SelectItem value="Aktif">Aktif</SelectItem>
-              <SelectItem value="Selesai">Selesai</SelectItem>
-              <SelectItem value="Dibatalkan">Dibatalkan</SelectItem>
+              {Object.values(ENUM_FILTER).map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -175,11 +177,13 @@ export default function Interns() {
                     <TableCell>
                       <span
                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          intern.status === "Aktif"
+                          intern.status === MagangStatus.AKTIF
                             ? "bg-green-100 text-green-800"
-                            : intern.status === "Selesai"
+                            : intern.status === MagangStatus.SELESAI
                             ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
+                            : intern.status === MagangStatus.DIBATALKAN
+                            ? "bg-red-100 text-red-800"
+                            : "bg-red-400 text-gray-950"
                         }`}
                       >
                         {intern.status}
@@ -241,13 +245,17 @@ export default function Interns() {
           </Table>
         </div>
 
-        {data?.totalPages && data.totalPages > 1 && (
+        {data?.totalPages && data.totalPages > 1 ? (
           <Pagination className="mt-4">
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className={page <= 1 ? "pointer-events-none opacity-50" : ""}
+                  className={
+                    page <= 1
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
                 />
               </PaginationItem>
 
@@ -257,6 +265,7 @@ export default function Interns() {
                     <PaginationLink
                       onClick={() => setPage(p)}
                       isActive={page === p}
+                      className="cursor-pointer"
                     >
                       {p}
                     </PaginationLink>
@@ -271,13 +280,15 @@ export default function Interns() {
                   }
                   className={
                     page >= data.totalPages
-                      ? "pointer-events-none opacity-50"
-                      : ""
+                      ? "pointer-events-none opacity-50 "
+                      : "cursor-pointer"
                   }
                 />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
+        ) : (
+          ""
         )}
       </div>
     </DashboardLayout>
