@@ -1,7 +1,7 @@
 import DashboardLayout from "@/components/dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MagangStatus } from "@/utils/constant";
 import { api } from "@/utils/trpc";
-import { MagangStatus } from "@prisma/client";
 import { Calendar, UserCheck, UsersRound, UserX } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";

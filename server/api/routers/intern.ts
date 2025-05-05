@@ -1,4 +1,4 @@
-import { MagangStatus } from "@prisma/client";
+import { MagangStatus } from "@/utils/constant";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 

@@ -19,19 +19,12 @@ model Admin {
 }
 
 model Intern {
-  id          String       @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   institution String
   startDate   DateTime
   endDate     DateTime
-  status      MagangStatus
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-}
-
-enum MagangStatus {
-  AKTIF // Saat ini masih magang
-  SELESAI // Sudah menyelesaikan magang
-  TIDAK_LULUS // Tidak memenuhi syarat kelulusan (tidak dapat sertifikat)
-  DIBATALKAN // Magang dibatalkan di tengah jalan
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

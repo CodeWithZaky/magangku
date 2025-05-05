@@ -35,8 +35,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { MagangStatus } from "@/utils/constant";
 import { api } from "@/utils/trpc";
-import { MagangStatus } from "@prisma/client";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
