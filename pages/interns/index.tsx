@@ -178,12 +178,14 @@ export default function Interns() {
                       <span
                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                           intern.status === MagangStatus.AKTIF
-                            ? "bg-green-100 text-green-800"
+                            ? "bg-green-100 text-green-800 border-green-800/50 border dark:border-none"
                             : intern.status === MagangStatus.SELESAI
-                            ? "bg-blue-100 text-blue-800"
+                            ? "bg-blue-100 text-blue-800 border border-blue-800/50 dark:border-none"
                             : intern.status === MagangStatus.DIBATALKAN
-                            ? "bg-red-100 text-red-800"
-                            : "bg-red-400 text-gray-950"
+                            ? "bg-red-100 text-red-800 border border-red-800/50 dark:border-none"
+                            : intern.status === MagangStatus.TIDAK_LULUS
+                            ? "bg-red-200 text-red-900 border border-red-900/50 dark:border-none"
+                            : "bg-gray-400 text-gray-950 border border-gray-950/50 dark:border-none"
                         }`}
                       >
                         {intern.status}

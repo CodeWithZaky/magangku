@@ -54,12 +54,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <SidebarProvider>
       <div className="flex w-full min-h-screen">
         <Sidebar>
-          <SidebarHeader className="p-4 border-b">
+          <SidebarHeader className="flex justify-center items-start p-2 border-b h-[60px]">
             <div className="flex items-center">
-              <h1 className="font-bold text-xl">Magangku</h1>
+              <h1 className="p-2 font-bold text-xl">Magangku</h1>
             </div>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="p-2">
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
@@ -113,7 +113,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </Sidebar>
 
         <div className="flex flex-col flex-1">
-          <header className="flex items-center gap-4 bg-background px-4 lg:px-6 border-b h-14 lg:h-[60px]">
+          <header className="flex items-center gap-4 bg-background px-4 lg:px-6 border-b h-[60px]">
             <SidebarTrigger />
             <div className="flex-1" />
             <ToggleTheme />
