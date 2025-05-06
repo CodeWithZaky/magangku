@@ -1,7 +1,14 @@
-import { MagangStatus, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { hash } from "bcrypt";
 
 const prisma = new PrismaClient();
+
+const MagangStatus = {
+  AKTIF: "AKTIF", // Saat ini masih magang
+  SELESAI: "SELESAI", // Sudah menyelesaikan magang
+  DIBATALKAN: "DIBATALKAN", // Tidak memenuhi syarat kelulusan (tidak dapat sertifikat)
+  TIDAK_LULUS: "TIDAK_LULUS", // Magang dibatalkan di tengah jalan
+};
 
 async function main() {
   // Create default admin
