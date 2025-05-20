@@ -12,8 +12,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Logo from "@/public/logo.png";
 import { AlertCircle } from "lucide-react";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -53,7 +55,11 @@ export default function Login() {
     <div className="flex justify-center items-center bg-muted/40 h-screen">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="font-bold text-2xl">Magangku</CardTitle>
+          <CardTitle className="flex gap-1">
+            <h1 className="font-bold text-xl uppercase">Magangku</h1>
+            <h1 className="text-lg">By</h1>
+            <Image src={Logo} alt="Logo" width={70} height={70} />
+          </CardTitle>
           <CardDescription>
             Masuk ke dashboard admin untuk mengelola data peserta magang
           </CardDescription>
