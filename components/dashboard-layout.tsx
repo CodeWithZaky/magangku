@@ -19,6 +19,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import Logo from "@/public/logo.png";
 import {
   ChevronDown,
   LayoutDashboard,
@@ -27,6 +28,7 @@ import {
   Users,
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type ReactNode, useState } from "react";
@@ -55,8 +57,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="flex w-full min-h-screen">
         <Sidebar>
           <SidebarHeader className="flex justify-center items-start p-2 border-b h-[60px]">
-            <div className="flex items-center">
-              <h1 className="p-2 font-bold text-xl">Magangku</h1>
+            <div className="flex items-center gap-1 p-2">
+              <h1 className="font-bold text-xl uppercase">Magangku</h1>
+              <h1 className="text-lg">By</h1>
+              <Image src={Logo} alt="Logo" width={70} height={70} />
             </div>
           </SidebarHeader>
           <SidebarContent className="p-2">
