@@ -4,14 +4,18 @@ import { hash } from "bcrypt";
 const prisma = new PrismaClient();
 
 const MagangStatus = {
-  AKTIF: "AKTIF", // Saat ini masih magang
-  SELESAI: "SELESAI", // Sudah menyelesaikan magang
-  DIBATALKAN: "DIBATALKAN", // Tidak memenuhi syarat kelulusan (tidak dapat sertifikat)
-  TIDAK_LULUS: "TIDAK_LULUS", // Magang dibatalkan di tengah jalan
+  AKTIF: "AKTIF",
+  SELESAI: "SELESAI",
+  DIBATALKAN: "DIBATALKAN",
+  TIDAK_LULUS: "TIDAK_LULUS",
 };
 
 async function main() {
-  // Create default admin
+  console.log("🧹 Menghapus semua data lama...");
+  await prisma.intern.deleteMany();
+  await prisma.admin.deleteMany();
+  console.log("✅ Semua data lama dihapus.");
+
   const adminExists = await prisma.admin.findUnique({
     where: { email: "admin@example.com" },
   });
@@ -21,19 +25,17 @@ async function main() {
       data: {
         name: "Admin",
         email: "admin@example.com",
-        passwordHash: await hash("password123", 10),
+        passwordHash: await hash("admin123", 10),
       },
     });
     console.log("Created default admin");
   }
 
-  // Create sample interns
   const internsCount = await prisma.intern.count();
 
   if (internsCount === 0) {
     const today = new Date();
 
-    // Sample data - 50 different interns
     const interns = [
       {
         name: "Budi Santoso",
@@ -376,6 +378,83 @@ async function main() {
         institution: "Universitas Nasional",
         startDate: new Date(today.getFullYear(), today.getMonth() - 1, 10),
         endDate: new Date(today.getFullYear(), today.getMonth() + 2, 10),
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Bayu Pratama",
+        institution: "Universitas Negeri Malang",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 2, 1),
+        endDate: new Date(today.getTime() + 6 * 24 * 60 * 60 * 1000), // 6 hari lagi
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Citra Lestari",
+        institution: "Universitas Negeri Yogyakarta",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 1, 10),
+        endDate: new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000), // 5 hari lagi
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Dimas Saputra",
+        institution: "Universitas Muhammadiyah Surakarta",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 1, 15),
+        endDate: new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000), // 4 hari lagi
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Eka Purnama",
+        institution: "Universitas Kristen Petra",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 2, 20),
+        endDate: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000), // 3 hari lagi
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Fani Nuraini",
+        institution: "Universitas Islam Indonesia",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 3, 1),
+        endDate: new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000), // 2 hari lagi
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Galih Santoso",
+        institution: "Universitas Negeri Semarang",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 2, 15),
+        endDate: new Date(today.getTime() + 1 * 24 * 60 * 60 * 1000), // 1 hari lagi
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Helmi Rahman",
+        institution: "Universitas Syiah Kuala",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 2, 10),
+        endDate: new Date(today.getTime() + 6 * 24 * 60 * 60 * 1000),
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Intan Sari",
+        institution: "Universitas Negeri Surabaya",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 1, 5),
+        endDate: new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000),
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Jefri Kurniawan",
+        institution: "Universitas Lampung",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 1, 15),
+        endDate: new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000),
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Kiki Amalia",
+        institution: "Universitas Negeri Makassar",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 2, 8),
+        endDate: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000),
+        status: MagangStatus.AKTIF,
+      },
+      {
+        name: "Lutfi Hidayat",
+        institution: "Universitas Riau",
+        startDate: new Date(today.getFullYear(), today.getMonth() - 3, 10),
+        endDate: new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000),
         status: MagangStatus.AKTIF,
       },
     ];
