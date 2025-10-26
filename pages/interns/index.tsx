@@ -1,4 +1,5 @@
 import DashboardLayout from "@/components/dashboard-layout";
+import { ExportPDFButton } from "@/components/export-pdf-button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -106,9 +107,12 @@ export default function Interns() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="font-bold text-3xl">Daftar Peserta Magang</h1>
-          <Button onClick={() => router.push("/interns/create")}>
-            <Plus className="mr-2 w-4 h-4" /> Tambah Peserta
-          </Button>
+          <div className="flex gap-2">
+            <ExportPDFButton />
+            <Button onClick={() => router.push("/interns/create")}>
+              <Plus className="mr-2 w-4 h-4" /> Tambah Peserta
+            </Button>
+          </div>
         </div>
 
         <div className="flex sm:flex-row flex-col gap-4 mb-6">

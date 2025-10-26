@@ -1,4 +1,6 @@
 import { MagangStatus } from "@/utils/constant";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -167,4 +169,49 @@ export const internRouter = createTRPCRouter({
         where: { id: input.id },
       });
     }),
+
+  exportInternsPDF: protectedProcedure.mutation(async ({ ctx }) => {
+    const interns = await ctx.prisma.intern.findMany({
+      orderBy: { startDate: "desc" },
+    });
+
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text("Laporan Data Peserta Magang PT. Minilemon Nusantara", 14, 15);
+    doc.setFontSize(10);
+    doc.text(
+      `Tanggal Cetak: ${new Date().toLocaleDateString("id-ID")}`,
+      14,
+      22
+    );
+
+    const tableColumn = [
+      "No",
+      "Nama",
+      "Asal Instansi",
+      "Tanggal Mulai",
+      "Tanggal Selesai",
+      "Status",
+    ];
+
+    const tableRows = interns.map((intern, index) => [
+      index + 1,
+      intern.name,
+      intern.institution,
+      new Date(intern.startDate).toLocaleDateString("id-ID"),
+      new Date(intern.endDate).toLocaleDateString("id-ID"),
+      intern.status,
+    ]);
+
+    // @ts-ignore
+    autoTable(doc, {
+      startY: 28,
+      head: [tableColumn],
+      body: tableRows,
+      styles: { fontSize: 9 },
+    });
+
+    const pdfBase64 = doc.output("datauristring");
+    return pdfBase64; // kirim ke frontend sebagai string base64
+  }),
 });
