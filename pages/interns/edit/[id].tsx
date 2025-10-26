@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -218,18 +219,20 @@ export default function EditIntern() {
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
                 <Select
-                  value={intern?.status}
+                  value={formData.status}
                   onValueChange={handleStatusChange}
                 >
                   <SelectTrigger id="status">
                     <SelectValue placeholder="Pilih status" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(MagangStatus).map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
+                    <SelectGroup>
+                      {Object.values(MagangStatus).map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {status}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
